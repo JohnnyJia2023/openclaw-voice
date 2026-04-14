@@ -16,6 +16,14 @@ import os
 from pathlib import Path
 from typing import Optional
 
+# Load .env into os.environ BEFORE pydantic-settings reads it
+# This lets os.getenv() and os.environ.get() work throughout (TTS, backend detection, etc.)
+try:
+    from dotenv import load_dotenv as _load_dotenv
+    _load_dotenv(dotenv_path=Path(__file__).parent.parent.parent / ".env", override=False)
+except Exception:
+    pass
+
 import numpy as np
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
