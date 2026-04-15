@@ -116,7 +116,12 @@ async def startup():
     # Initialize AI backend
     # Auto-detect OpenClaw gateway
     gateway_url = settings.openclaw_gateway_url or os.getenv("OPENCLAW_GATEWAY_URL")
-    gateway_token = settings.openclaw_gateway_token or os.getenv("OPENCLAW_GATEWAY_TOKEN")
+    # Prefer OPENCLAW_GW_TOKEN because gateway auth.token is sourced from it in this workspace.
+    gateway_token = (
+        os.getenv("OPENCLAW_GW_TOKEN")
+        or settings.openclaw_gateway_token
+        or os.getenv("OPENCLAW_GATEWAY_TOKEN")
+    )
     
     if gateway_url and gateway_token:
         # Use OpenClaw gateway (connects to Aria!)
